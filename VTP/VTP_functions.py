@@ -1,6 +1,13 @@
 """
 Title: VTP Functions
-Description: Vehicle telematics processing functions for quickly
+
+Description: Vehicle telematics processing functions for creating derivative
+data products from telematics data.
+
+Author: Alexander Yoshizumi
+With Contributions from: Eleftheria Kontou and Roulin Zhang
+
+Last Updated: 11 February 2022
 
 """
 
@@ -275,9 +282,8 @@ def assign_vehicle_state(df, time_column, speed_column, spd_thr, str_thr=1, end_
 
 # TEST #
 
+# Replace this file name with whatever file path you use.
 df1 = pd.read_csv('G:/My Drive/EDF/Data/01_Source/drayagesocal.00/2015.c1.t12127.ice.08.drayage/I35_12127_2015-06-16.csv')
-
-a = 'YYYY-MM-DD hh:mm:ss-__:__'
 
 add_date_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Date_Time')
 
