@@ -1,5 +1,6 @@
 """
-... 
+Title: VTP Functions
+Description: Vehicle telematics processing functions for quickly
 
 """
 
@@ -25,9 +26,7 @@ def parse_date(date, form):
         'M' corresponds to month, and 'D' corresponds to day.
         
     Returns:
-        year: Year as integer.
-        month: Month as integer.
-        day: Day as integer.
+        datetime.date object
     '''
     
     # Identify positions of date components from user-provided formatting.
@@ -64,9 +63,7 @@ def parse_time(time, form):
         'm' corresponds to minute, and 's' corresponds to second.
         
     Returns:
-        hour: Hour as integer.
-        minute: minute as integer.
-        second: second as integer.
+        datetime.time object
     '''
     
     # Identify positions of date components from user-provided formatting.
@@ -105,9 +102,7 @@ def parse_date_time(date_time, form):
         to hour, 'm' corresponds to minute, and 's' corresponds to second.
         
     Returns:
-        hour: Hour as integer.
-        minute: minute as integer.
-        second: second as integer.
+        datetime.datetime object
     '''
     
     # Identify positions of date components from user-provided formatting.
@@ -265,10 +260,10 @@ def assign_vehicle_state(df, time_column, speed_column, spd_thr, str_thr=1, end_
                 temp.loc[i,'State'] = 'STARTING'
             elif sum(temp.loc[(i-1):(i-1),'Boolean']) >= 1 and sum(temp.loc[(i+1):(i+end_thr),'Boolean']) == 0:
                 temp.loc[i,'State'] = 'ENDING'
-            elif sum(temp.loc[(i-1):(i-1),'Boolean']) >= 1 and sum(temp.loc[(i+1):(i+1),'Boolean']) >= 1:
+            elif sum(temp.loc[i:i,'Boolean']) == 1:
                 temp.loc[i,'State'] = 'OPERATING'
-            else:
-                temp.loc[i,'State'] = 'ISLAND' # Needs to be corrected
+        else:
+            temp.loc[i,'State'] = 'DEPOT'
             
     # Generate dataframe to hold results.
     r = pd.DataFrame(index = np.arange(nobs), columns=np.arange(0))
@@ -294,7 +289,7 @@ df2['GpsSpeed'] = df2['GpsSpeed'].fillna(0)
 
 df3 = average_over_interval(df2,'GpsSpeed',(60*15))
 
-dff = assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=3,end_thr=3)
+dff = assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)
 
 # tes = merge_by_time(df, date_time_column='Date_Time')
 
