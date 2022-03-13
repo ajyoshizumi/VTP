@@ -5,7 +5,7 @@ Description: Vehicle telematics processing functions for creating derivative
 data products from telematics data.
 
 Author: Alexander Yoshizumi
-With Contributions from: Eleftheria Kontou and Roulin Zhang
+With Contributions from: Eleftheria Kontou and Ruolin Zhang
 
 Last Updated: 11 February 2022
 
