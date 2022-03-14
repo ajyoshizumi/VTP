@@ -16,6 +16,8 @@ import pandas as pd
 import numpy as np
 import statistics as st
 import sys
+import os
+import glob
 
 
 def substring_position(string, substring):
@@ -278,24 +280,128 @@ def assign_vehicle_state(df, time_column, speed_column, spd_thr, str_thr=1, end_
     r['State'] = list(temp['State'][nobs:(nobs*2)])
     
     return r
+
+def return_file_list(root_dir, file_level = 1, filter_term = ''):
+    
+    if file_level == 1:
+        file_list = glob.glob(pathname = os.path.join(root_dir,'*' + filter_term), recursive = True)
+    elif file_level == 2:
+        file_list = glob.glob(pathname = os.path.join(root_dir,'*','*' + filter_term), recursive = True)
+    elif file_level == 3:
+        file_list = glob.glob(pathname = os.path.join(root_dir,'*','*','*' + filter_term), recursive = True)
+    else:
+        return sys.exit('The variable "file_level" must be a number between 1 and 3.')
+    
+    return file_list
+    
+def parse_variables(text, form):
+
+    
+    # Identify positions of date components from user-provided formatting.
+    veh_pos = substring_position(string = form, substring = 'V')
+    voc_pos = substring_position(string = form, substring = 'O')
+    wgt_pos = substring_position(string = form, substring = 'W')
+    eng_pos = substring_position(string = form, substring = 'E')
+    y_pos = substring_position(string = form, substring = 'Y')
+    m_pos = substring_position(string = form, substring = 'M')
+    d_pos = substring_position(string = form, substring = 'D')
+    
+    # Store variable components.
+    vid = str()
+    voc = str()
+    wgt = str()
+    eng = str()
+    yea = str()
+    mon = str()
+    day = str()
+
+    
+    for i in y_pos:
+        yea = yea + text[i]
+    
+    for i in m_pos:
+        mon = mon + text[i]
+    
+    for i in d_pos:
+        day = day + text[i]
+    
+    for i in veh_pos:
+        vid = vid + text[i]
+    
+    for i in voc_pos:
+        voc = voc + text[i]
+    
+    for i in wgt_pos:
+        wgt = wgt + text[i]
+    
+    for i in eng_pos:
+        eng = eng + text[i]
+
+    dat = datetime.date(year = int(yea),
+                         month = int(mon),
+                         day = int(day))
+
+    var_list = list()
+    var_list.append(vid)
+    var_list.append(voc)
+    var_list.append(wgt)
+    var_list.append(eng)
+    var_list.append(dat)
+    
+    return var_list
+            
+
+def process_telematics_from_directory(directory, file_level, var_form,
+                                      time_column, speed_column, spd_thr,
+                                      str_thr, end_thr, interval,
+                                      time_col, time_form, new_time_col,
+                                      date_col, date_form, new_date_col):
+    
+    # Normalize the file pathway.
+    directory = os.path.normpath(directory)
+    
+    # Create a list that contains every file that will be looped through.
+    all_files = return_file_list(root_dir = directory,
+                                 file_level = file_level,
+                                 filter_term = '.csv')
+    
+    # Create a table the will be used to hold variables for each of the files.
+    var_df = pd.DataFrame(columns=['Vehicle_ID','Vocation','Weight_Class','Engine','Date'])
+    
+    for i in all_files:
+        var = parse_variables(text = i, form = var_form)
+        var_df.loc[len(var_df)] = var
+    
+    # Add ISO day of the week to the dataframe.
+    add_isoweekday_from_date_time(df = var_df,
+                                  date_time_column = 'Date',
+                                  new_column = 'ISO_Day')
+    
+    return var_df
     
 
 # TEST #
 
 # Replace this file name with whatever file path you use.
-df1 = pd.read_csv('G:/My Drive/EDF/Data/01_Source/drayagesocal.00/2015.c1.t12127.ice.08.drayage/I35_12127_2015-06-16.csv')
+df1 = pd.read_csv('Q:/My Drive/EDF/Data/01_Source/drayagesocal.00/2015.c1.t12127.ice.08.drayage/I35_12127_2015-06-16.csv')
 
 add_date_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Date_Time')
 
-add_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-TT:TT','Time')
+add_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
 
 df2 = standardize_by_time(df1, time_column='Time')
 
 df2['GpsSpeed'] = df2['GpsSpeed'].fillna(0)
 
-df3 = average_over_interval(df2,'GpsSpeed',(60*15))
+df3 = average_over_interval(df2, column = 'GpsSpeed', interval = (60*15))
 
 dff = assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)
+
+x = process_telematics_from_directory('Q:/My Drive/EDF/Data/01_Source/drayagesocal.00',
+                                  2,
+                                  '________________________________________________________VVVVV_EEE_WW_OOOOOOO___________YYYY_MM_DD____',
+                                  None, None, None, None, None,
+                                  None, None, None, None, None, None, None)
 
 # tes = merge_by_time(df, date_time_column='Date_Time')
 
