@@ -349,19 +349,61 @@ def parse_variables(text, form):
     var_list.append(dat)
     
     return var_list
-            
 
-def process_telematics_from_directory(directory, file_level, var_form,
-                                      time_column, speed_column, spd_thr,
-                                      str_thr, end_thr, interval,
-                                      time_col, time_form, new_time_col,
-                                      date_col, date_form, new_date_col):
+def is_numeric(x):
+    if type(x) == int:
+        return True
+    elif type(x) == float:
+        return True
+    elif type(x) == str and x.isnumeric():
+        return True
+    else:
+        return False
+
+def summarize_state_variables(df, time_col, state_col):
+    
+    str_table = pd.DataFrame(df.loc[df[state_col] == 'STARTING', time_col])
+    end_table = pd.DataFrame(df.loc[df[state_col] == 'ENDING', time_col])
+    str_count = len(str_table)
+    end_count = len(end_table)
+    
+    max_count = max(str_count,end_count)
+    
+    df_sum = pd.DataFrame()
+    
+    df_sum['Start_Count'] = [str_count]
+    df_sum['End_Count'] = [end_count]
+    
+    for i in range(max_count):
+        try:
+            df_sum['Start_'+str(i+1).zfill(2)] = str_table.iloc[i,0].hour + (str_table.iloc[i,0].minute / 60)
+        except:
+            df_sum['Start_'+str(i+1).zfill(2)] = -99
+    
+    for i in range(max_count):
+        try:
+            df_sum['End_'+str(i+1).zfill(2)] = end_table.iloc[i,0].hour + (end_table.iloc[i,0].minute / 60)
+        except:
+            df_sum['End_'+str(i+1).zfill(2)] = -99
+    
+    return df_sum
+    
+def calculate_distance(df, interval, speed_col):
+    distance_table = (df[speed_col] / 3600) * interval
+    distance = sum(distance_table)
+    
+    return distance
+        
+def process_telematics_from_directory(directory, file_level, var_format,
+                                      speed_col, new_speed_col,
+                                      spd_thr, str_thr, end_thr, interval,
+                                      time_col, time_format, new_time_col):
     
     # Normalize the file pathway.
-    directory = os.path.normpath(directory)
+    direct = os.path.normpath(directory)
     
     # Create a list that contains every file that will be looped through.
-    all_files = return_file_list(root_dir = directory,
+    all_files = return_file_list(root_dir = direct,
                                  file_level = file_level,
                                  filter_term = '.csv')
     
@@ -369,13 +411,40 @@ def process_telematics_from_directory(directory, file_level, var_form,
     var_df = pd.DataFrame(columns=['Vehicle_ID','Vocation','Weight_Class','Engine','Date'])
     
     for i in all_files:
-        var = parse_variables(text = i, form = var_form)
+        var = parse_variables(text = i, form = var_format)
         var_df.loc[len(var_df)] = var
     
     # Add ISO day of the week to the dataframe.
     add_isoweekday_from_date_time(df = var_df,
                                   date_time_column = 'Date',
                                   new_column = 'ISO_Day')
+    
+    for i in range(len(all_files)):
+        # Read CSV file.
+        df1 = pd.read_csv(all_files[i])
+        
+        # Add time column as a date-time object.
+        add_time(df = df1, time_column = time_col, time_form = time_format,
+                 new_column_name = new_time_col)
+        
+        
+        # Standardize the dataset so that it includes a full 86400-second day.
+        df2 = standardize_by_time(df = df1, time_column = new_time_col)
+        
+        # Fill any non-numeric values.
+        df2[new_speed_col] = df2[speed_col].fillna(0)
+        
+        # Calculate total distance driven in this observation day.
+        dist = calculate_distance(df = df2, interval = 1, speed_col = speed_col)
+        
+        # Average speed over the interval provided.
+        df3 = average_over_interval(df = df2, column = new_speed_col,
+                                    interval = interval)
+        
+        # Assign vehicle state based on the averaged interval data.
+        dff = assign_vehicle_state(df = df3, time_column = time_col,
+                                   speed_column = new_speed_col,
+                                   spd_thr = 0.01, str_thr = 1, end_thr = 1)
     
     return var_df
     
@@ -397,11 +466,11 @@ df3 = average_over_interval(df2, column = 'GpsSpeed', interval = (60*15))
 
 dff = assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)
 
-x = process_telematics_from_directory('Q:/My Drive/EDF/Data/01_Source/drayagesocal.00',
-                                  2,
-                                  '________________________________________________________VVVVV_EEE_WW_OOOOOOO___________YYYY_MM_DD____',
-                                  None, None, None, None, None,
-                                  None, None, None, None, None, None, None)
+# x = process_telematics_from_directory('Q:/My Drive/EDF/Data/01_Source/drayagesocal.00',
+#                                   2,
+#                                   '________________________________________________________VVVVV_EEE_WW_OOOOOOO___________YYYY_MM_DD____',
+#                                   None, None, None, None, None,
+#                                   None, None, None, None)
 
 # tes = merge_by_time(df, date_time_column='Date_Time')
 
