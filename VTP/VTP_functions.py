@@ -405,20 +405,20 @@ def process_telematics_from_directory(directory, file_level, var_format,
     
     # Create a list that contains every file that will be looped through.
     all_files = return_file_list(root_dir = direct,
-                                 file_level = file_level,
-                                 filter_term = '.csv')
+                                  file_level = file_level,
+                                  filter_term = '.csv')
     
     # Create a table the will be used to hold variables for each of the files.
     var_df = pd.DataFrame(columns=['Vehicle_ID','Vocation','Weight_Class','Engine','Date'])
     
-    for i in all_files:
-        var = parse_variables(text = i, form = var_format)
+    for i in range(len(all_files)):
+        var = parse_variables(text = all_files[i], form = var_format)
         var_df.loc[len(var_df)] = var
     
-    # # Add ISO day of the week to the dataframe.
-    # add_isoweekday_from_date_time(df = var_df,
-    #                               date_time_column = 'Date',
-    #                               new_column = 'ISO_Day')
+    # Add ISO day of the week to the dataframe.
+    add_isoweekday_from_date_time(df = var_df,
+                                  date_time_column = 'Date',
+                                  new_column = 'ISO_Day')
     
     for i in range(len(all_files)):
         # Read CSV file.
@@ -426,7 +426,7 @@ def process_telematics_from_directory(directory, file_level, var_format,
         
         # Add time column as a date-time object.
         add_time(df = df1, time_column = time_col, time_form = time_format,
-                 new_column_name = new_time_col)
+                  new_column_name = new_time_col)
         
         
         # Standardize the dataset so that it includes a full 86400-second day.
@@ -444,16 +444,27 @@ def process_telematics_from_directory(directory, file_level, var_format,
         
         # Assign vehicle state based on the averaged interval data.
         df4 = assign_vehicle_state(df = df3, time_column = new_time_col,
-                                   speed_column = new_speed_col,
-                                   spd_thr = spd_thr, str_thr = str_thr,
-                                   end_thr = end_thr)
+                                    speed_column = new_speed_col,
+                                    spd_thr = spd_thr, str_thr = str_thr,
+                                    end_thr = end_thr)
     
         # Summarize key variables related to operational state of the vehicles.
-        df5 = summarize_state_variables(df = df4, time_col = new_time_col,
+        if i == 0:
+            df5 = summarize_state_variables(df = df4, time_col = new_time_col,
                                         state_col = 'State')
         
-        df5.loc[i,'Distance'] = dist
-        
+            df5.loc[i,'Distance'] = dist
+        else:
+            df5 = df5.append(summarize_state_variables(df = df4,
+                                                        time_col = new_time_col,
+                                                        state_col = 'State'))
+            
+            df5 = df5.reset_index(drop = True)
+            
+            df5.loc[i,'Distance'] = dist
+    
+    df5 = df5.reindex(sorted(df5.columns), axis = 1)
+    
     # Combine parsed variables with state variables and distance.
     rdf = pd.concat([var_df, df5], axis = 1)
         
@@ -477,7 +488,7 @@ df3 = average_over_interval(df2, column = 'GpsSpeed', interval = (60*15))
 
 dff = assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)
 
-x = process_telematics_from_directory('Q:/My Drive/EDF/Data/01_Source/drayagesocal.00',
+x = process_telematics_from_directory('G:/My Drive/EDF/Data/01_Source/drayagesocal.00',
                                   2,
                                   '________________________________________________________VVVVV_EEE_WW_OOOOOOO___________YYYY_MM_DD____','GpsSpeed','Speed',
                                   'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
