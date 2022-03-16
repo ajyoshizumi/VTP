@@ -289,8 +289,12 @@ def return_file_list(root_dir, file_level = 1, filter_term = ''):
         file_list = glob.glob(pathname = os.path.join(root_dir,'*','*' + filter_term), recursive = True)
     elif file_level == 3:
         file_list = glob.glob(pathname = os.path.join(root_dir,'*','*','*' + filter_term), recursive = True)
+    elif file_level == 4:
+        file_list = glob.glob(pathname = os.path.join(root_dir,'*','*','*','*' + filter_term), recursive = True)
+    elif file_level == 5:
+        file_list = glob.glob(pathname = os.path.join(root_dir,'*','*','*','*','*' + filter_term), recursive = True)
     else:
-        return sys.exit('The variable "file_level" must be a number between 1 and 3.')
+        return sys.exit('The variable "file_level" must be a number between 1 and 5.')
     
     return file_list
     
@@ -447,7 +451,12 @@ def process_telematics_from_directory(directory, file_level, var_format,
                                     speed_column = new_speed_col,
                                     spd_thr = spd_thr, str_thr = str_thr,
                                     end_thr = end_thr)
-    
+        
+        if i == 0:
+            rdf1 = df4
+        else:
+            rdf1 = pd.concat([rdf1,df4['State']], axis = 1)
+        
         # Summarize key variables related to operational state of the vehicles.
         if i == 0:
             df5 = summarize_state_variables(df = df4, time_col = new_time_col,
@@ -466,32 +475,40 @@ def process_telematics_from_directory(directory, file_level, var_format,
     df5 = df5.reindex(sorted(df5.columns), axis = 1)
     
     # Combine parsed variables with state variables and distance.
-    rdf = pd.concat([var_df, df5], axis = 1)
+    rdf2 = pd.concat([var_df, df5], axis = 1)
         
-    return rdf
+    return rdf1, rdf2
     
 
 # TEST #
 
+
+
+# x,y = process_telematics_from_directory('G:/My Drive/EDF/Data/01_Source/drayagesocal.00',
+#                                   2,
+#                                   '________________________________________________________VVVVV_EEE_WW_OOOOOOO___________YYYY_MM_DD____','GpsSpeed','Speed',
+#                                   'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
+
+x = process_telematics_from_directory('G:\\My Drive\\EDF\\Data\\01_Source\\cngsocal.00',
+                                      4,
+                                      '______________________________________________________________________________________________________________VVVVV_EEE_WW_OOOOOOO______________________________YYYY_MM_DD____',
+                                      'GpsSpeed','Speed',
+                                      'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
+
 # Replace this file name with whatever file path you use.
-df1 = pd.read_csv('G:/My Drive/EDF/Data/01_Source/drayagesocal.00/2015.c1.t12127.ice.08.drayage/I35_12127_2015-06-16.csv')
+# df1 = pd.read_csv('G:/My Drive/EDF/Data/01_Source/drayagesocal.00/2015.c1.t12127.ice.08.drayage/I35_12127_2015-06-16.csv')
 
-add_date_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Date_Time')
+# add_date_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Date_Time')
 
-add_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
+# add_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
 
-df2 = standardize_by_time(df1, time_column='Time')
+# df2 = standardize_by_time(df1, time_column='Time')
 
-df2['GpsSpeed'] = df2['GpsSpeed'].fillna(0)
+# df2['GpsSpeed'] = df2['GpsSpeed'].fillna(0)
 
-df3 = average_over_interval(df2, column = 'GpsSpeed', interval = (60*15))
+# df3 = average_over_interval(df2, column = 'GpsSpeed', interval = (60*15))
 
-dff = assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)
-
-x = process_telematics_from_directory('G:/My Drive/EDF/Data/01_Source/drayagesocal.00',
-                                  2,
-                                  '________________________________________________________VVVVV_EEE_WW_OOOOOOO___________YYYY_MM_DD____','GpsSpeed','Speed',
-                                  'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
+# dff = assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)
 
 # tes = merge_by_time(df, date_time_column='Date_Time')
 
