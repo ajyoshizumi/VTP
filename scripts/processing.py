@@ -19,9 +19,9 @@ import sys
 import os
 import glob2 as glob
 
-sys.path.insert(1, 'C:\\Users\\alexa\\OneDrive\\Documents\\GitHub\\VTP\\core')
+sys.path.insert(1, 'C:\\Users\\alexa\\OneDrive\\Documents\\GitHub\\VTP\\src\\vtp')
 
-import vtp as vtp
+import src
 
 # PROCESSING # 
 

@@ -1,5 +1,5 @@
 """
-Title: VTP Functions
+Title: VTP
 
 Description: The VTP package contains functions for processing
 vehicle telematics data and applying deterministic rules to

@@ -6,8 +6,8 @@
 =====================================================================
 
 **VTP** is a Python package that contains functions for processing
-vehicle telematics data and applying deterministic rules in order to
-characterize a vehicle's activity.
+vehicle telematics data and characterizing the driving activity of a
+vehicle.
 
 Main Features
 -------------
