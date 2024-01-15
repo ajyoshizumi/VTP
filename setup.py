@@ -16,13 +16,16 @@ setup(
     author_email='alexanderyoshizumi@applieddataresearch.org',
     license='Apache-2.0',
     classifiers=[
-        'License :: OSI Approved :: Apache License 2.0',
+        'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
     ],
     install_requires=['glob2 >= 0.7',
                       'numpy >= 1.26.3',
                       'pandas >= 2.1.4'
-                      ],
+    ],
+    extras_require={
+        'dev': ['twine>=4.0.2'],
+    },
     python_requires=">=3.10",
 )
