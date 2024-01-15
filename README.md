@@ -1,8 +1,8 @@
-# VTP
+# vtp
 
 **Author:** Alexander Yoshizumi
 
-## VTP - a package for (v)ehicle (t)elamatics (p)rocessing in Python.
+## vtp - a package for (v)ehicle (t)elamatics (p)rocessing in Python.
 =====================================================================
 
 **VTP** is a Python package that contains functions for processing
