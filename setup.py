@@ -13,7 +13,7 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/ajyoshizumi/vtp',
     author='Alexander Yoshizumi',
-    author_email='alexanderyoshizumi@applieddataresearch.org',
+    author_email='alexanderyoshizumi@gmail.com',
     license='Apache-2.0',
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
