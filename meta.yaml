@@ -1,0 +1,34 @@
+package:
+  name: VTP
+  version: 1.0.0
+
+source:
+  git_rev: ...
+  git_url: https://github.com/ajyoshizumi/VTP.git
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python >=3.7.0
+    - datetime
+    - pandas
+    - numpy
+    - statistics
+    - sys
+    - os
+    - glob
+
+test:
+  imports:
+    - vtp
+
+about:
+  description: 'The VTP package contains functions for processing vehicle
+    telematics data and applying deterministic equations to characterize a
+    the driving activity of a vehicle.'
+  home: https://github.com/ajyoshizumi/VTP
+  license: Apache-2.0
+  license_file: LICENSE.txt

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "VTP"
 version = "1.0.0"
 authors = [
-    {name = Alexander Yoshizumi, email = "ajy@applieddataresearch.org"}
+    {name = Alexander Yoshizumi, email = "ajy@applieddataresearch.org"},
 ]
 description = "The VTP package contains functions for processing vehicle telematics data and applying deterministic equations to characterize a vehicle's driving activity."
 readme = "README.md"
@@ -16,7 +16,7 @@ classifiers = [
     "License :: OSI Approved :: Apache-2.0",
     "Operating System :: OS Independent",
 ]
-dependencies = ["datetime", "pandas", "numpy", "statistics", "sys", "os", glob"]
+dependencies = ["datetime", "pandas", "numpy", "statistics", "sys", "os", "glob",]
 
 [project.urls]
 Homepage = "https://github.com/ajyoshizumi/VTP"

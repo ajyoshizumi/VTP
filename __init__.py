@@ -20,28 +20,6 @@ if miss_dep:
     )
 del key_dep, miss_dep, dep
 
-# Import package functions.
-from VTP.core.VTP_functions import (
-    substring_position,
-    parse_date,
-    parse_time,
-    parse_date_time,
-    add_date,
-    add_time,
-    add_date_time,
-    add_isoweekday_from_date_time,
-    add_time_from_date_time,
-    standardize_by_time,
-    average_over_interval,
-    assign_vehicle_state,
-    return_file_list,
-    parse_variables,
-    is_numeric,
-    summarize_state_variables,
-    calculate_distance,
-    process_telematics_from_directory
-)
-
 # Module level document details.
 __doc__ = """
 VTP - a package for (v)ehicle (t)elamatics (p)rocessing in Python.
