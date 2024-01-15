@@ -21,7 +21,7 @@ import glob2 as glob
 
 sys.path.insert(1, 'C:\\Users\\alexa\\OneDrive\\Documents\\GitHub\\VTP\\core')
 
-import vtp_functions as vtp
+import vtp as vtp
 
 # PROCESSING # 
 

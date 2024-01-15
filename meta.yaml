@@ -1,23 +1,22 @@
+{% set name = "vtp" %}
+{% set version = "1.0.0" %}
+
 package:
   name: vtp
-  version: 1.0.0
+  version: {{version}}
 
 source:
-  git_rev: ...
-  git_url: https://github.com/ajyoshizumi/VTP.git
+  git_url: https://github.com/ajyoshizumi/vtp.git
+  git_rev: 1.0.0
 
 requirements:
   build:
     - python
+    - git
     - setuptools
 
   run:
-    - python >=3.7.0
-    - datetime
-    - pandas
-    - numpy
-    - statistics
-    - glob2
+    - python
 
 test:
   imports:
