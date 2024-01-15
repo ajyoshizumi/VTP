@@ -18,9 +18,10 @@ import datetime
 import pandas as pd
 import numpy as np
 import statistics as st
+import glob2 as glob
 import sys
 import os
-import glob
+
 
 # ---------------------------------------------------------------------------
 # VTP Package Functions

@@ -1,5 +1,5 @@
 package:
-  name: VTP
+  name: vtp
   version: 1.0.0
 
 source:
@@ -17,9 +17,7 @@ requirements:
     - pandas
     - numpy
     - statistics
-    - sys
-    - os
-    - glob
+    - glob2
 
 test:
   imports:

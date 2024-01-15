@@ -17,7 +17,7 @@ import numpy as np
 import statistics as st
 import sys
 import os
-import glob
+import glob2 as glob
 
 sys.path.insert(1, 'C:\\Users\\alexa\\OneDrive\\Documents\\GitHub\\VTP\\core')
 
