@@ -267,17 +267,17 @@ import vtp
 
 # TEST AREA #
 
-# Replace this file name with whatever file path you use.
-df1 = pd.read_csv('G:\\My Drive\\02_EDF\\Data\\01_Source\\cngsocal.00\\cngsocal.00.2019.c1.t12181.ice.08.transit.csv\\2019.c1.t12181.ice.08.transit\\2019.c1.t12181.ice.08.transit.2016-02-22.csv')
+# # Replace this file name with whatever file path you use.
+# df1 = pd.read_csv('G:\\My Drive\\02_EDF\\Data\\01_Source\\cngsocal.00\\cngsocal.00.2019.c1.t12181.ice.08.transit.csv\\2019.c1.t12181.ice.08.transit\\2019.c1.t12181.ice.08.transit.2016-02-22.csv')
 
-vtp.add_date_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Date_Time')
+# vtp.add_date_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Date_Time')
 
-vtp.add_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
+# vtp.add_time(df1,'DateTime_Logger_UTC','YYYY-MM-DD hh:mm:ss-__:__','Time')
 
-df2 = vtp.standardize_by_time(df1, time_column='Time')
+# df2 = vtp.standardize_by_time(df1, time_column='Time')
 
-df2['GpsSpeed'] = df2['GpsSpeed'].fillna(0)
+# df2['GpsSpeed'] = df2['GpsSpeed'].fillna(0)
 
-df3 = vtp.average_over_interval(df2, column = 'GpsSpeed', interval = (60*15))
+# df3 = vtp.average_over_interval(df2, column = 'GpsSpeed', interval = (60*15))
 
-dff = vtp.assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)
+# dff = vtp.assign_vehicle_state(df = df3, time_column='Time',speed_column='GpsSpeed',spd_thr=0.01,str_thr=1,end_thr=1)

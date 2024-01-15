@@ -1,0 +1,10 @@
+LICENSE.txt
+README.md
+setup.py
+vtp/src/__init__.py
+vtp/src/vtp.py
+vtp/vtp.egg-info/PKG-INFO
+vtp/vtp.egg-info/SOURCES.txt
+vtp/vtp.egg-info/dependency_links.txt
+vtp/vtp.egg-info/requires.txt
+vtp/vtp.egg-info/top_level.txt

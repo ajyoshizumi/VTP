@@ -1,11 +1,6 @@
 LICENSE.txt
 README.md
 setup.py
-src/VTP.egg-info/PKG-INFO
-src/VTP.egg-info/SOURCES.txt
-src/VTP.egg-info/dependency_links.txt
-src/VTP.egg-info/requires.txt
-src/VTP.egg-info/top_level.txt
 src/vtp.egg-info/PKG-INFO
 src/vtp.egg-info/SOURCES.txt
 src/vtp.egg-info/dependency_links.txt

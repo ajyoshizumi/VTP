@@ -1,0 +1,36 @@
+Metadata-Version: 2.1
+Name: vtp
+Version: 1.0.0
+Summary: Package contains functions for processing vehicle telematics data and characterizing the driving activity of a vehicle.
+Home-page: https://github.com/ajyoshizumi/vtp
+Author: Alexander Yoshizumi
+Author-email: alexanderyoshizumi@applieddataresearch.org
+License: Apache-2.0
+Classifier: License :: OSI Approved :: Apache License 2.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: glob2>=0.7
+Requires-Dist: numpy>=1.26.3
+Requires-Dist: pandas>=2.1.4
+
+# vtp
+
+**Author:** Alexander Yoshizumi
+
+## vtp - a package for (v)ehicle (t)elamatics (p)rocessing in Python.
+=====================================================================
+
+**VTP** is a Python package that contains functions for processing
+vehicle telematics data and characterizing the driving activity of a
+vehicle.
+
+Main Features
+-------------
+    - standardize telematics data files containing time-location data
+    to equal-time-interval tables.
+    - assign vehicle states based on fleet vehicle activities
+    - collect variables on the behavior of fleet vehicles in order to
+    cluster vehicle-day observations into like duty cycles.
